@@ -1,7 +1,6 @@
 var expect = require('chai').expect;
-var load = require('./sut.loader');
-var Promise = load('Promise', '../lib/promises.js');
-var Promises = load('Promises', '../lib/promises.js');
+var Promise = require('../lib/promises.js').promise;
+var Promises = require('../lib/promises.js').promises;
 
 describe('Promises', function() {
 

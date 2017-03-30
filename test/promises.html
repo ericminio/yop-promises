@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <script src="../lib/promises.js"></script>
+  </head>
+  <body>
+    <label id="status"></label>
+    <script>
+      var promise = new Promise();
+      promise.done(function() {
+          var status = document.getElementById('status');
+          status.innerHTML = 'it works' ;
+      });
+      promise.resolve();
+    </script>
+  </body>
+</html>
