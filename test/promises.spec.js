@@ -1,0 +1,111 @@
+var expect = require('chai').expect;
+var load = require('./sut.loader');
+var Promise = load('Promise', '../lib/promises.js');
+var Promises = load('Promises', '../lib/promises.js');
+
+describe('Promises', function() {
+
+    it('allows deferred treatment', function(success) {
+        var p = new Promise();
+        p.done(function() {
+            success();
+        });
+        p.resolve();
+    });
+    it('propagates data', function(success) {
+        var p = new Promise();
+        p.done(function(data) {
+            expect(data).to.deep.equal({ answer:42 });
+            success();
+        });
+        p.resolve({ answer:42 });
+    });
+    it('allows deferred error', function(success) {
+        var p = new Promise();
+        p
+        .done(function() {
+        })
+        .error(function() {
+            success();
+        });
+        p.reject();
+    });
+    it('supports no resolve callback', function() {
+        var p = new Promise();
+        p.resolve();
+    });
+    it('supports no reject callback', function() {
+        var p = new Promise();
+        p.reject();
+    });
+
+    describe('collection', function() {
+
+        it('waits for all promises to be resolved', function(success) {
+            var p1 = new Promise();
+            var p2 = new Promise();
+
+            var ps = new Promises();
+            ps.done(function() {
+                expect(ps.promises).to.deep.equal([]);
+                success();
+            });
+            ps.waitFor(p1);
+            ps.waitFor(p2);
+            p1.resolve();
+            p2.resolve();
+        });
+        it('keeps callbacks previously registered in promises', function(done) {
+            var p = new Promise();
+            p.done(function() {
+                done();
+            });
+            var ps = new Promises();
+            ps.waitFor(p);
+            p.resolve();
+        });
+        it('waits for all promises to be resolved or rejected', function(done) {
+            var p1 = new Promise();
+            var p2 = new Promise();
+
+            var ps = new Promises();
+            ps.done(function() {
+                expect(ps.promises).to.deep.equal([]);
+                done();
+            });
+            ps.waitFor(p1);
+            ps.waitFor(p2);
+            p1.resolve();
+            p2.reject();
+        });
+        it('supports full rejection', function(success) {
+            var p1 = new Promise();
+            var p2 = new Promise();
+
+            var ps = new Promises();
+            ps.done(function() {
+                expect(ps.promises).to.deep.equal([]);
+                success();
+            });
+            ps.waitFor(p1);
+            ps.waitFor(p2);
+            p1.reject();
+            p2.reject();
+        });
+        it('keeps rejection callbacks previously registered in promises', function(done) {
+            var p = new Promise();
+            p.error(function() {
+                done();
+            });
+            var ps = new Promises();
+            ps.waitFor(p);
+            p.reject();
+        });
+        it('supports no resolve callback', function() {
+            var ps = new Promises();
+            var p = new Promise();
+            ps.waitFor(p);
+            p.resolve();
+        });
+    });
+});

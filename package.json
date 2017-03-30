@@ -1,0 +1,26 @@
+{
+  "name": "yop-promises",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/promises.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericminio/yop-promises.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ericminio/yop-promises/issues"
+  },
+  "homepage": "https://github.com/ericminio/yop-promises#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}
