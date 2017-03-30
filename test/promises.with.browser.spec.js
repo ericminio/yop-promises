@@ -6,7 +6,7 @@ var read = function(file) {
     return content;
 };
 
-describe('Zombie', function() {
+describe('Promises in browser', function() {
 
     var app;
     var port = 5000;
