@@ -26,7 +26,7 @@
     "scripts": {
         "test": "mocha test --recursive",
         "cover": "./node_modules/.bin/istanbul cover --root ./lib --report none ./node_modules/mocha/bin/_mocha -- test --recursive",
-        "report": "./node_modules/.bin/istanbul report --root coverage --dir coverage lcovonly",
+        "report": "./node_modules/.bin/istanbul report --root coverage --dir coverage ",
         "coveralls": "npm run cover && npm run report && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
     }
 }

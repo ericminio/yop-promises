@@ -45,7 +45,12 @@ describe('Promises in browser', function() {
         var dirname = currentFile.substring(0, currentFile.lastIndexOf(path.sep));
         var filename = currentFile.substring(1+currentFile.lastIndexOf(path.sep));
         var filePath = path.join(dirname, '../coverage', 'coverage.' + filename + '.json');
-        fs.writeFileSync(filePath, JSON.stringify(data));
+
+        var wrongName = Object.keys(data)[0];
+        var correctName = path.join(__dirname, '../lib/promises.js');
+        correctName = correctName.split("\\").join("\\\\");
+        var content = JSON.stringify(data).split(wrongName).join(correctName);
+        fs.writeFileSync(filePath, content);
         app.close();
     });
 
