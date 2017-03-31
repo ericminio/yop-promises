@@ -1,22 +1,9 @@
+var coverage = require('./yop-zombie-istanbul.js');
 const Browser = require('zombie');
 var browser = new Browser();
 var fs = require('fs');
 var path = require('path');
-var istanbul = require('istanbul');
-var read = function(file) {
-    var filePath = path.join(__dirname, file);
-    var content = fs.readFileSync(filePath).toString();
-    return content;
-};
-var instrument = function(file) {
-    var global = (Function('return this;'))();
-    global['__coverage__'] = {};
-    var instrumenter = new istanbul.Instrumenter();
-    var code = read(file);
-    var instrumented = instrumenter.instrumentSync(code);
-    return instrumented;
-};
-var global = (Function('return this'))();
+
 describe('Promises in browser', function() {
 
     var app;
@@ -26,31 +13,19 @@ describe('Promises in browser', function() {
         app = require('http').createServer(function(request, response) {
             if (request.url=='/') {
                 response.setHeader('Content-Type', 'text/html');
-                response.write(read('./promises.html'));
+                var filePath = path.join(__dirname, './promises.html');
+                var content = fs.readFileSync(filePath).toString();
+                response.write(content);
             }
             else {
                 response.setHeader('Content-Type', 'application/javascript');
-                response.write(instrument('../lib/promises.js'));
+                response.write(coverage.instrument('../lib/promises.js'));
             }
             response.end();
         }).listen(port, done);
     });
     afterEach(function() {
-        var code = "" +
-            "var global = (Function('return this;'))();" +
-            "var report = global['__coverage__'];" +
-            "report;";
-        var data = browser.evaluate(code);
-        var currentFile = __filename;
-        var dirname = currentFile.substring(0, currentFile.lastIndexOf(path.sep));
-        var filename = currentFile.substring(1+currentFile.lastIndexOf(path.sep));
-        var filePath = path.join(dirname, '../coverage', 'coverage.' + filename + '.json');
-
-        var wrongName = Object.keys(data)[0];
-        var correctName = path.join(__dirname, '../lib/promises.js');
-        correctName = correctName.split("\\").join("\\\\");
-        var content = JSON.stringify(data).split(wrongName).join(correctName);
-        fs.writeFileSync(filePath, content);
+        coverage.save(browser);
         app.close();
     });
 
