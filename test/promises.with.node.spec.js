@@ -2,7 +2,7 @@ var expect = require('chai').expect;
 var Promise = require('../lib/promises.js').promise;
 var Promises = require('../lib/promises.js').promises;
 
-describe('Promises', function() {
+describe('Promise', function() {
 
     it('allows deferred treatment', function(success) {
         var p = new Promise();
@@ -28,6 +28,17 @@ describe('Promises', function() {
             success();
         });
         p.reject();
+    });
+    it('propagates error on error', function(success) {
+        var p = new Promise();
+        p
+        .done(function() {
+        })
+        .error(function(data) {
+            expect(data).to.deep.equal({ answer:33 });
+            success();
+        });
+        p.reject({ answer:33} );
     });
     it('supports no resolve callback', function() {
         var p = new Promise();
