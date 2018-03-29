@@ -1,6 +1,5 @@
 var expect = require('chai').expect;
-var Promise = require('../lib/promises.js').promise;
-var Promises = require('../lib/promises.js').promises;
+var { Promise, Promises } = require('../lib/promises.js');
 
 describe('Promise', function() {
 
@@ -24,7 +23,7 @@ describe('Promise', function() {
         p
         .done(function() {
         })
-        .error(function() {
+        .catch(function() {
             success();
         });
         p.reject();
@@ -34,8 +33,8 @@ describe('Promise', function() {
         p
         .done(function() {
         })
-        .error(function(data) {
-            expect(data).to.deep.equal({ answer:33 });
+        .catch(function(error) {
+            expect(error).to.deep.equal({ answer:33 });
             success();
         });
         p.reject({ answer:33} );
@@ -104,7 +103,7 @@ describe('Promise', function() {
         });
         it('keeps rejection callbacks previously registered in promises', function(done) {
             var p = new Promise();
-            p.error(function() {
+            p.catch(function() {
                 done();
             });
             var ps = new Promises();
