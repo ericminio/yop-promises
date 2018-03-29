@@ -64,7 +64,7 @@ describe('Promise', function() {
             p1.resolve();
             p2.resolve();
         });
-        it('keeps callbacks previously registered in promises', function(done) {
+        it('keeps resolve callbacks previously registered in promises', function(done) {
             var p = new Promise();
             p.done(function() {
                 done();
