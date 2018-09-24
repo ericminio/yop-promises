@@ -29,4 +29,22 @@ describe('Promises chain', function() {
         });
         p.resolve();
     });
+
+    it('cathes promise rejection as expected', function(success) {
+        var p = new Promise();
+        p.then(function() {
+            let secondary = new Promise();
+            setTimeout(()=>{ secondary.reject({ answer:42 }) }, 50);
+
+            return secondary;
+        })
+        .then(function(data) {
+            expect(data).to.deep.equal('never called');
+        })
+        .catch(function(data) {
+            expect(data).to.deep.equal({ answer:42 });
+            success();
+        });
+        p.resolve();
+    });
 });
