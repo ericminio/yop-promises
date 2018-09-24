@@ -47,4 +47,19 @@ describe('Promises chain', function() {
         });
         p.resolve();
     });
+
+    it('cathes errors as expected', function(success) {
+        var p = new Promise();
+        p.then(function() {
+            throw new Error('horrible')
+        })
+        .then(function(data) {
+            expect(data).to.deep.equal('never called');
+        })
+        .catch(function(error) {
+            expect(error.message).to.deep.equal('horrible');
+            success();
+        });
+        p.resolve();
+    });
 });
