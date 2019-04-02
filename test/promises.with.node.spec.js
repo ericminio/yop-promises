@@ -50,6 +50,20 @@ describe('Promise', function() {
 
     describe('collection', function() {
 
+        it('collects data', function(success) {
+            var p1 = new Promise();
+            var p2 = new Promise();
+
+            var ps = new Promises();
+            ps.done(function(data) {
+                expect(data).to.deep.equal([1, 2]);
+                success();
+            });
+            ps.waitFor(p1);
+            ps.waitFor(p2);
+            p1.resolve(1);
+            p2.resolve(2);
+        });
         it('waits for all promises to be resolved', function(success) {
             var p1 = new Promise();
             var p2 = new Promise();
